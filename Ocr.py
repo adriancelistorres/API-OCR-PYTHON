@@ -19,6 +19,29 @@ def realizar_ocr():
         # Crear una imagen PIL desde los bytes decodificados
         imagen_original = Image.open(io.BytesIO(imagen_bytes))
 
+
+        # pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'  # Reemplaza con la ubicación correcta de Tesseract en tu sistema
+
+        # #=========================================================================================
+
+        # texto = pytesseract.image_to_string(imagen_original)
+        # inicio_servicio = texto.find("Servicios")
+
+        # desplazamiento_x = 1
+        # desplazamiento_y =2
+        # # Si se encuentra la palabra "Servicio", recorta la imagen desde esa posición con el desplazamiento hasta el final
+        # if inicio_servicio != -1:
+        #     x1 = max(0, inicio_servicio - desplazamiento_x)
+        #     y1 =desplazamiento_y
+        #     x2 = imagen_original.width
+        #     y2 = imagen_original.height
+
+        #     imagen_recortada = imagen_original.crop((x1, y1, x2, y2))
+        #     imagen_recortada.save('imagen_recortada.png')
+        # Cierra la imagen original
+        #imagen_original.close()
+        #=========================================================================================
+
         # Realizar el recorte de la imagen en partes más pequeñas
         # Define las coordenadas de recorte según tus necesidades
         coordenadas_corte1 = (0, 0, 250, 100)
@@ -29,11 +52,11 @@ def realizar_ocr():
         parte_cortada2 = imagen_original.crop(coordenadas_corte2)
 
         # Define las coordenadas para cortar la tercera parte de la imagen (a la derecha de la segunda)
-        coordenadas_corte3 = (coordenadas_corte2[2], 0, coordenadas_corte2[2] + 300, 100)
+        coordenadas_corte3 = (coordenadas_corte2[2], 0, coordenadas_corte2[2] + 350, 100)
         parte_cortada3 = imagen_original.crop(coordenadas_corte3)
 
         # Define las coordenadas para cortar la tercera parte de la imagen (a la derecha de la segunda)
-        coordenadas_corte4 = (coordenadas_corte3[2], 0, coordenadas_corte3[2] + 300, 100)
+        coordenadas_corte4 = (coordenadas_corte3[2], 0, coordenadas_corte3[2] + 350, 100)
         parte_cortada4 = imagen_original.crop(coordenadas_corte4)
 
         # Define las coordenadas para cortar la quinta parte de la imagen (abajo de la primera)
@@ -67,13 +90,13 @@ def realizar_ocr():
         parte_cortada9 = imagen_original.crop(coordenadas_corte9)
 
         # Define las coordenadas para cortar la novena parte de la imagen (al costado del corte 8)
-        coordenadas_corte10 = (coordenadas_corte9[2], coordenadas_corte9[1], coordenadas_corte9[2] + 350, coordenadas_corte9[3])  # Ajusta estas coordenadas para la novena parte
+        coordenadas_corte10 = (coordenadas_corte9[2], coordenadas_corte9[1], coordenadas_corte9[2] + 340, coordenadas_corte9[3])  # Ajusta estas coordenadas para la novena parte
 
         # Corta la novena parte deseada de la imagen original
         parte_cortada10 = imagen_original.crop(coordenadas_corte10)
 
         # Define las coordenadas para cortar la novena parte de la imagen (al costado del corte 8)
-        coordenadas_corte11 = (coordenadas_corte10[2], coordenadas_corte10[1], coordenadas_corte10[2] + 350, coordenadas_corte10[3])  # Ajusta estas coordenadas para la novena parte
+        coordenadas_corte11 = (coordenadas_corte10[2], coordenadas_corte10[1], coordenadas_corte10[2] + 370, coordenadas_corte10[3])  # Ajusta estas coordenadas para la novena parte
 
         # Corta la novena parte deseada de la imagen original
         parte_cortada11 = imagen_original.crop(coordenadas_corte11)
