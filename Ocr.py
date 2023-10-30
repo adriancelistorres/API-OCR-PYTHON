@@ -3,7 +3,9 @@ import pytesseract
 from flask import Flask, request, jsonify
 import base64
 import io
-import re
+import json
+import os
+
 
 app = Flask(__name__)
 
@@ -141,8 +143,13 @@ def realizar_ocr():
         # Cierra la imagen original
         imagen_original.close()
 
+        tesseract_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tesseract-ocr', 'tesseract.exe')
+
+        pytesseract.pytesseract.tesseract_cmd = tesseract_dir
+        # Aplica OCR para obtener el texto de cada imagen
+
         # Especifica la ubicación del ejecutable de Tesseract
-        pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'  # Reemplaza con la ubicación correcta de Tesseract en tu sistema
+        # pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'  # Reemplaza con la ubicación correcta de Tesseract en tu sistema
 
         # Abre las imágenes recortadas
         imagen1 = Image.open('imagen_rearmada1.jpg')
@@ -206,10 +213,9 @@ def realizar_ocr():
         texto_imagenes.append(texto_imagen17)
 
 
-
         # Imprime el texto de cada imagen
-        for i, texto in enumerate(texto_imagenes):
-            print(f"Texto de imagen {i + 1}:\n{texto}\n")
+        # for i, texto in enumerate(texto_imagenes):
+        #     print(f"Texto de imagen {i + 1}:\n{texto}\n")
 
         # Cierra las imágenes
         imagen1.close()
@@ -230,26 +236,92 @@ def realizar_ocr():
         imagen16.close()
         imagen17.close()
 
+
+        # Elimina las imágenes del disco duro
+        imagenes_a_eliminar = [
+        'imagen_rearmada1.jpg', 'imagen_rearmada2.jpg', 'imagen_rearmada3.jpg', 'imagen_rearmada4.jpg',
+        'imagen_rearmada5.jpg', 'imagen_rearmada6.jpg', 'imagen_rearmada7.jpg',
+        'imagen_rearmada8.jpg', 'imagen_rearmada9.jpg', 'imagen_rearmada10.jpg', 'imagen_rearmada11.jpg',
+        'imagen_rearmada12.jpg', 'imagen_rearmada13.jpg',
+        'imagen_rearmada14.jpg', 'imagen_rearmada15.jpg', 'imagen_rearmada16.jpg', 'imagen_rearmada17.jpg'
+        ]
+
+        for imagen in imagenes_a_eliminar:
+                try:
+                        os.remove(imagen)
+                        print(f"Imagen {imagen} eliminada.")
+                except FileNotFoundError:
+                        print(f"La imagen {imagen} no se encontró.")
+                except Exception as e:
+                        print(f"Error al eliminar la imagen {imagen}: {e}")
+
+        servicios1 = texto_imagen1.strip().split('\n')
+        servicios2 = texto_imagen2.strip().split('\n')
+        servicios3 = texto_imagen3.strip().split('\n')
+        servicios4 = texto_imagen4.strip().split('\n')
+        servicios5 = texto_imagen5.strip().split('\n')
+        servicios6 = texto_imagen6.strip().split('\n')
+        servicios7 = texto_imagen7.strip().split('\n')
+
+        equipos1=texto_imagen8.strip().split('\n')
+        equipos2=texto_imagen9.strip().split('\n')
+        equipos3=texto_imagen10.strip().split('\n')
+        equipos4=texto_imagen11.strip().split('\n')
+        equipos5=texto_imagen12.strip().split('\n')
+        equipos6=texto_imagen13.strip().split('\n')
+
+
+        servicios_adicionales1=texto_imagen14.strip().split('\n')
+        servicios_adicionales2=texto_imagen15.strip().split('\n')
+        servicios_adicionales3=texto_imagen16.strip().split('\n')
+        servicios_adicionales4=texto_imagen17.strip().split('\n')
+
+
+
+        data = {
+        "Servicios": {
+                servicios1[2]: servicios1[3],
+                servicios2[0]: servicios2[1],
+                servicios3[0]: servicios3[1],
+                servicios4[0]: servicios4[1],
+                servicios5[0]: servicios5[1],
+                servicios6[0]: servicios6[1]if len(servicios6) > 1 else "-",
+                servicios7[0]: servicios7[1],
+ 
+        },
+        "Equipos": {
+                equipos1[2]: equipos1[4],
+                equipos2[0]: equipos2[1],
+                equipos3[0]: equipos3[1],
+                equipos4[0]: equipos4[2],
+                equipos5[0]: equipos5[2],
+                equipos6[0]: equipos6[1],
+        },
+        "Servicios_Adicionales": {
+                servicios_adicionales1[2]: servicios_adicionales1[4],
+                servicios_adicionales2[0]: servicios_adicionales2[1],
+                servicios_adicionales3[0]: servicios_adicionales3[1],
+                servicios_adicionales4[0]: servicios_adicionales4[1],
+        }
+
+        }
+        json_data = json.dumps(data, ensure_ascii=False, indent=4)
+
+        print(json_data)
+
+
+
+
         # Formatear el resultado en JSON
         resultado_json = {
-            'textos_partes': texto_imagenes
+        #     'textos_partes': texto_imagenes
+                    'data': data
+
+
         }
-                    # Usar expresión regular para extraer la clave y el valor
+        
+        # print(texto_imagenes)
 
-        texto = "Servicios\n\nCantidad lineas moviles disponibles para contratar\n1\n"
-
-        # Usar expresión regular para extraer la clave y el valor
-        match = re.search(r'(.+?)\s*\n(.+)', texto)
-
-        # Crear un diccionario anidado con la estructura deseada
-        resultado_json = {}
-        if match:
-            categoria = match.group(1)
-            clave = match.group(1)
-            valor = match.group(2)
-            resultado_json[categoria] = {clave: valor}
-
-        print(resultado_json)
         return jsonify(resultado_json)
     
 
