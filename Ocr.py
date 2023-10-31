@@ -5,9 +5,11 @@ import base64
 import io
 import json
 import os
+from flask_cors import CORS  # Importa la extensión
 
 
 app = Flask(__name__)
+CORS(app)  # Habilita CORS para toda la aplicación
 
 @app.route('/realizar-ocr', methods=['POST'])
 def realizar_ocr():
@@ -291,7 +293,7 @@ def realizar_ocr():
         },
         "Equipos": {
                 equipos1[2]: equipos1[4],
-                equipos2[0]: equipos2[1],
+                equipos2[0]: equipos2[2],
                 equipos3[0]: equipos3[1],
                 equipos4[0]: equipos4[2],
                 equipos5[0]: equipos5[2],

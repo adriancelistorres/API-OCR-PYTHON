@@ -2,7 +2,7 @@ import cv2
 import pytesseract
 
 # Cargar la imagen
-image = cv2.imread('pararecortar.png')
+image = cv2.imread('PRUEBA7.png')
 
 # Convertir la imagen a escala de grises
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -22,13 +22,13 @@ for i, line in enumerate(lines):
         servicios_line = i
         break
 
-# Recortar 20 píxeles hacia la izquierda desde la palabra "servicios"
 if servicios_line != -1:
-    x_position = max(lines[servicios_line].find("servicios") * 10 - 20, 0)  # Ajusta el valor 20 según tus necesidades
-    image_cropped = image[:, x_position:]
+    y_position = servicios_line * 20  # Ajusta la cantidad de píxeles a recortar arriba
+    x_position = 60  # Ajusta la cantidad de píxeles a recortar a la izquierda
+    image_cropped = image[y_position:, x_position:]
 else:
     # Si no se encuentra "servicios," mantener la imagen original
     image_cropped = image
 
-# Guardar la imagen recortada
+# Guardamos la imagen recortada
 cv2.imwrite('imagen_recortada.png', image_cropped)
